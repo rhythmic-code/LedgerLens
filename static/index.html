@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Explain</title>
+    <style>
+        :root {
+            --bg: #07111f;
+            --bg-soft: #0d1a2b;
+            --panel: rgba(8, 20, 36, 0.86);
+            --panel-strong: rgba(14, 30, 52, 0.96);
+            --line: rgba(148, 163, 184, 0.18);
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-2: #22c55e;
+            --warn: #f59e0b;
+            --danger: #f87171;
+            --shadow: 0 24px 60px rgba(2, 6, 23, 0.38);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 25%),
+                radial-gradient(circle at top right, rgba(34, 197, 94, 0.14), transparent 22%),
+                linear-gradient(180deg, #06101c 0%, #0a1422 45%, #07111f 100%);
+        }
+
+        .shell {
+            width: min(1240px, calc(100% - 32px));
+            margin: 32px auto 48px;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 32px;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(8, 20, 36, 0.96), rgba(10, 28, 49, 0.88));
+            box-shadow: var(--shadow);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto -60px -80px auto;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.22), transparent 70%);
+            pointer-events: none;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(2.2rem, 5vw, 4.4rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            max-width: 10ch;
+        }
+
+        .hero-copy {
+            max-width: 760px;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .panel-body {
+            padding: 22px;
+        }
+
+        .panel-title {
+            margin: 0 0 8px;
+            font-size: 1.05rem;
+        }
+
+        .panel-subtitle {
+            margin: 0 0 20px;
+            color: var(--muted);
+            font-size: 0.94rem;
+            line-height: 1.6;
+        }
+
+        .stack {
+            display: grid;
+            gap: 14px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 0.92rem;
+        }
+
+        input,
+        button,
+        textarea {
+            width: 100%;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.88);
+            color: var(--text);
+            padding: 12px 14px;
+            font: inherit;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            accent-color: var(--accent);
+        }
+
+        button {
+            cursor: pointer;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            border: none;
+            font-weight: 600;
+            transition: transform 160ms ease, opacity 160ms ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        button.secondary {
+            background: rgba(30, 41, 59, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+        }
+
+        button:disabled {
+            cursor: wait;
+            opacity: 0.65;
+            transform: none;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0 4px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .results {
+            display: grid;
+            gap: 20px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .metric {
+            padding: 18px;
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(10, 20, 35, 0.9));
+            border: 1px solid var(--line);
+        }
+
+        .metric .label {
+            display: block;
+            color: var(--muted);
+            font-size: 0.84rem;
+            margin-bottom: 8px;
+        }
+
+        .metric .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .card {
+            padding: 20px;
+            border-radius: 22px;
+            background: var(--panel-strong);
+            border: 1px solid var(--line);
+        }
+
+        .card h2 {
+            margin: 0 0 14px;
+            font-size: 1rem;
+        }
+
+        .mono-block,
+        .rich-block,
+        .message {
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.7;
+        }
+
+        .mono-block {
+            margin: 0;
+            color: #cbd5e1;
+            font-family: "Cascadia Code", "Consolas", monospace;
+            font-size: 0.9rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .data-table th {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        .change-positive {
+            color: var(--accent-2);
+        }
+
+        .change-negative {
+            color: var(--danger);
+        }
+
+        .change-neutral {
+            color: #e2e8f0;
+        }
+
+        .message {
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid var(--line);
+        }
+
+        .message.info {
+            background: rgba(14, 116, 144, 0.12);
+            color: #bae6fd;
+        }
+
+        .message.error {
+            background: rgba(127, 29, 29, 0.18);
+            color: #fecaca;
+        }
+
+        .empty {
+            color: var(--muted);
+            text-align: center;
+            padding: 56px 20px;
+            border: 1px dashed rgba(148, 163, 184, 0.18);
+            border-radius: 22px;
+        }
+
+        @media (max-width: 980px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                width: min(100% - 20px, 1240px);
+                margin-top: 12px;
+            }
+
+            .hero,
+            .panel-body,
+            .card {
+                padding: 18px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <section class="hero">
+            <h1>AI CFO review for startup P&amp;Ls</h1>
+            <p class="hero-copy">
+                Upload a CSV or Excel profit and loss statement, inspect the business summary, generate AI feedback,
+                and test scenario changes before you spend or hire.
+            </p>
+        </section>
+
+        <section class="layout">
+            <div class="panel">
+                <div class="panel-body">
+                    <h2 class="panel-title">Upload and Analyze</h2>
+                    <p class="panel-subtitle">Run the base business review first, then test a scenario against the same file.</p>
+
+                    <form id="analyzeForm" class="stack">
+                        <div>
+                            <label for="financialFile">P&amp;L file</label>
+                            <input id="financialFile" name="file" type="file" accept=".csv,.xlsx,.xls" required>
+                        </div>
+
+                        <label class="checkbox-row">
+                            <input id="includeAi" name="include_ai" type="checkbox" checked>
+                            <span>Include AI financial analysis</span>
+                        </label>
+
+                        <button id="analyzeButton" type="submit">Analyze Business</button>
+                    </form>
+
+                    <div style="height: 24px;"></div>
+
+                    <h2 class="panel-title">Scenario Simulator</h2>
+                    <p class="panel-subtitle">Model growth, hiring, and cost pressure using the same uploaded file.</p>
+
+                    <div class="grid-2" id="presetButtons"></div>
+
+                    <form id="scenarioForm" class="stack" style="margin-top: 16px;">
+                        <div class="grid-2">
+                            <div>
+                                <label for="revenueGrowth">Revenue Growth (%)</label>
+                                <input id="revenueGrowth" name="revenue_growth" type="number" value="0" min="-50" max="100" step="1">
+                            </div>
+                            <div>
+                                <label for="expenseChange">Expense Change (%)</label>
+                                <input id="expenseChange" name="expense_change" type="number" value="0" min="-50" max="100" step="1">
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div>
+                                <label for="newEmployees">New Employees</label>
+                                <input id="newEmployees" name="new_employees" type="number" value="0" min="0" step="1">
+                            </div>
+                            <div>
+                                <label for="monthlyCostPerEmployee">Monthly Cost Per Employee</label>
+                                <input id="monthlyCostPerEmployee" name="monthly_cost_per_employee" type="number" value="6000" min="0" step="500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="marketingSpendIncrease">Marketing Spend Increase (%)</label>
+                            <input id="marketingSpendIncrease" name="marketing_spend_increase" type="number" value="0" min="-50" max="100" step="1">
+                        </div>
+
+                        <label class="checkbox-row">
+                            <input id="includeAiReview" name="include_ai_review" type="checkbox" checked>
+                            <span>Include AI scenario review</span>
+                        </label>
+
+                        <button id="scenarioButton" type="submit" class="secondary">Run Scenario</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="results">
+                <div id="feedback" class="message info">Upload a file to start. `sample_pnl.csv` works for a quick test.</div>
+                <div id="resultsRoot" class="empty">Analysis results will appear here.</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const presetButtons = document.getElementById("presetButtons");
+        const analyzeForm = document.getElementById("analyzeForm");
+        const scenarioForm = document.getElementById("scenarioForm");
+        const financialFile = document.getElementById("financialFile");
+        const includeAi = document.getElementById("includeAi");
+        const includeAiReview = document.getElementById("includeAiReview");
+        const feedback = document.getElementById("feedback");
+        const resultsRoot = document.getElementById("resultsRoot");
+        const analyzeButton = document.getElementById("analyzeButton");
+        const scenarioButton = document.getElementById("scenarioButton");
+
+        const currency = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0
+        });
+
+        const percent = new Intl.NumberFormat("en-US", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+        });
+
+        function setFeedback(message, type = "info") {
+            feedback.className = `message ${type}`;
+            feedback.textContent = message;
+        }
+
+        function formatCurrency(value) {
+            return currency.format(Number(value || 0));
+        }
+
+        function formatPercent(value) {
+            return `${percent.format(Number(value || 0))}%`;
+        }
+
+        function deltaClass(value) {
+            if (value > 0) return "change-positive";
+            if (value < 0) return "change-negative";
+            return "change-neutral";
+        }
+
+        function metricCard(label, value) {
+            return `
+                <div class="metric">
+                    <span class="label">${label}</span>
+                    <div class="value">${value}</div>
+                </div>
+            `;
+        }
+
+        function buildMetrics(metrics) {
+            return `
+                <div class="metrics">
+                    ${metricCard("Total Revenue", formatCurrency(metrics.total_revenue))}
+                    ${metricCard("Total Expenses", formatCurrency(metrics.total_expenses))}
+                    ${metricCard("Net Profit", formatCurrency(metrics.net_profit))}
+                    ${metricCard("Profit Margin", formatPercent(metrics.profit_margin))}
+                </div>
+            `;
+        }
+
+        function buildDataTable(rows) {
+            if (!rows || !rows.length) {
+                return `<div class="empty">No preview rows returned.</div>`;
+            }
+
+            const columns = Object.keys(rows[0]);
+            const header = columns.map((column) => `<th>${column}</th>`).join("");
+            const body = rows.map((row) => {
+                const cells = columns.map((column) => `<td>${row[column] ?? ""}</td>`).join("");
+                return `<tr>${cells}</tr>`;
+            }).join("");
+
+            return `
+                <table class="data-table">
+                    <thead><tr>${header}</tr></thead>
+                    <tbody>${body}</tbody>
+                </table>
+            `;
+        }
+
+        function renderAnalyzeResult(data) {
+            const aiBlock = data.ai_analysis
+                ? `<div class="card"><h2>AI CFO Analysis</h2><div class="rich-block">${data.ai_analysis}</div></div>`
+                : "";
+
+            resultsRoot.className = "results";
+            resultsRoot.innerHTML = `
+                ${buildMetrics(data.metrics)}
+                <div class="card">
+                    <h2>Upload Summary</h2>
+                    <p><strong>File:</strong> ${data.filename}</p>
+                    <p><strong>Rows Processed:</strong> ${data.row_count}</p>
+                    <p><strong>Analysis Horizon:</strong> ${data.analysis_periods} month(s)</p>
+                </div>
+                <div class="card">
+                    <h2>Financial Summary</h2>
+                    <pre class="mono-block">${data.summary}</pre>
+                </div>
+                <div class="card">
+                    <h2>Data Preview</h2>
+                    ${buildDataTable(data.data_preview)}
+                </div>
+                ${aiBlock}
+            `;
+        }
+
+        function renderScenarioResult(data) {
+            const comparison = data.comparison;
+            const aiBlock = data.ai_review
+                ? `<div class="card"><h2>AI Scenario Review</h2><div class="rich-block">${data.ai_review}</div></div>`
+                : "";
+
+            resultsRoot.className = "results";
+            resultsRoot.innerHTML = `
+                ${buildMetrics(data.current_metrics)}
+                <div class="card">
+                    <h2>Scenario Outcome</h2>
+                    <div class="metrics">
+                        ${metricCard("Scenario Revenue", formatCurrency(data.scenario_metrics.total_revenue))}
+                        ${metricCard("Scenario Expenses", formatCurrency(data.scenario_metrics.total_expenses))}
+                        ${metricCard("Scenario Profit", formatCurrency(data.scenario_metrics.net_profit))}
+                        ${metricCard("Scenario Margin", formatPercent(data.scenario_metrics.profit_margin))}
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>Comparison</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Revenue</td>
+                                <td class="${deltaClass(comparison.revenue_change)}">${formatCurrency(comparison.revenue_change)}</td>
+                            </tr>
+                            <tr>
+                                <td>Expenses</td>
+                                <td class="${deltaClass(comparison.expenses_change)}">${formatCurrency(comparison.expenses_change)}</td>
+                            </tr>
+                            <tr>
+                                <td>Profit</td>
+                                <td class="${deltaClass(comparison.profit_change)}">${formatCurrency(comparison.profit_change)}</td>
+                            </tr>
+                            <tr>
+                                <td>Margin</td>
+                                <td class="${deltaClass(comparison.margin_change)}">${formatPercent(comparison.margin_change)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h2>Scenario Summary</h2>
+                    <p><strong>File:</strong> ${data.filename}</p>
+                    <pre class="mono-block">${data.scenario_summary}</pre>
+                </div>
+                ${aiBlock}
+            `;
+        }
+
+        async function fetchJson(url, options = {}) {
+            const response = await fetch(url, options);
+            const contentType = response.headers.get("content-type") || "";
+            const payload = contentType.includes("application/json") ? await response.json() : await response.text();
+
+            if (!response.ok) {
+                const detail = typeof payload === "string" ? payload : payload.detail || "Request failed.";
+                throw new Error(detail);
+            }
+
+            return payload;
+        }
+
+        async function loadPresets() {
+            try {
+                const presets = await fetchJson("/presets");
+                presetButtons.innerHTML = Object.entries(presets).map(([name, values]) => {
+                    const escaped = encodeURIComponent(JSON.stringify(values));
+                    return `<button type="button" class="secondary" data-preset="${escaped}">${name}</button>`;
+                }).join("");
+
+                presetButtons.querySelectorAll("[data-preset]").forEach((button) => {
+                    button.addEventListener("click", () => {
+                        const preset = JSON.parse(decodeURIComponent(button.dataset.preset));
+                        document.getElementById("revenueGrowth").value = preset.revenue_growth;
+                        document.getElementById("expenseChange").value = preset.expense_change;
+                        document.getElementById("newEmployees").value = preset.new_employees;
+                        document.getElementById("monthlyCostPerEmployee").value = preset.monthly_cost_per_employee;
+                        document.getElementById("marketingSpendIncrease").value = preset.marketing_spend_increase;
+                        setFeedback(`Applied preset: ${button.textContent}`, "info");
+                    });
+                });
+            } catch (error) {
+                presetButtons.innerHTML = "";
+            }
+        }
+
+        analyzeForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            if (!financialFile.files.length) {
+                setFeedback("Choose a CSV or Excel file first.", "error");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", financialFile.files[0]);
+            formData.append("include_ai", includeAi.checked ? "true" : "false");
+
+            analyzeButton.disabled = true;
+            setFeedback("Analyzing the uploaded P&L...", "info");
+
+            try {
+                const data = await fetchJson("/analyze", {
+                    method: "POST",
+                    body: formData
+                });
+                renderAnalyzeResult(data);
+                setFeedback("Business analysis completed.", "info");
+            } catch (error) {
+                setFeedback(error.message, "error");
+            } finally {
+                analyzeButton.disabled = false;
+            }
+        });
+
+        scenarioForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            if (!financialFile.files.length) {
+                setFeedback("Upload the same file before running a scenario.", "error");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", financialFile.files[0]);
+            formData.append("revenue_growth", document.getElementById("revenueGrowth").value);
+            formData.append("expense_change", document.getElementById("expenseChange").value);
+            formData.append("new_employees", document.getElementById("newEmployees").value);
+            formData.append("monthly_cost_per_employee", document.getElementById("monthlyCostPerEmployee").value);
+            formData.append("marketing_spend_increase", document.getElementById("marketingSpendIncrease").value);
+            formData.append("include_ai_review", includeAiReview.checked ? "true" : "false");
+
+            scenarioButton.disabled = true;
+            setFeedback("Running scenario simulation...", "info");
+
+            try {
+                const data = await fetchJson("/scenario", {
+                    method: "POST",
+                    body: formData
+                });
+                renderScenarioResult(data);
+                setFeedback("Scenario review completed.", "info");
+            } catch (error) {
+                setFeedback(error.message, "error");
+            } finally {
+                scenarioButton.disabled = false;
+            }
+        });
+
+        loadPresets();
+    </script>
+</body>
+</html>
