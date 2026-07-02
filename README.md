@@ -1,6 +1,6 @@
-# Finance Explain
+# LedgerLens
 
-Finance Explain is a `FastAPI` application with both:
+LedgerLens is a `FastAPI` application with both:
 
 - a browser UI for uploading a P&L and reviewing results
 - a JSON API for direct integrations
