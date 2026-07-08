@@ -3,12 +3,17 @@ import os
 from pathlib import Path
 from typing import Literal, Optional
 
+from dotenv import load_dotenv
 import pandas as pd
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from google import genai
 from openai import OpenAI
 from pydantic import BaseModel
+
+# Load environment variables from a .env file if present
+load_dotenv()
+
 
 
 SYSTEM_PROMPT = """
